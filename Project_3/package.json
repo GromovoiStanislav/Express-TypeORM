@@ -18,7 +18,7 @@
   },
   "scripts": {
     "typeorm": "typeorm-ts-node-commonjs",
-    "start:dev": "nodemon --exec ts-node --esm src/index.ts",
+    "start:dev": "ts-node --esm src/index.ts",
     "start:prod": "node dist/index.js",
     "build": "tsc"
   }
