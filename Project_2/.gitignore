@@ -5,3 +5,5 @@ build/
 dist/
 tmp/
 temp/
+.gitignore
+package-lock.json
