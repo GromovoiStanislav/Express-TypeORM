@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import { validate } from 'class-validator';
 
-import { User } from './entity/User';
-import { Post } from './entity/Post';
-import dataSource from './db/data-source';
+import { User } from './entity/User.js';
+import { Post } from './entity/Post.js';
+import dataSource from './db/data-source.js';
 
 dataSource
   .initialize()
@@ -19,7 +19,9 @@ dataSource
         const user = User.create({ name, email, role });
 
         const errors = await validate(user);
-        if (errors.length > 0) throw errors;
+        if (errors.length > 0) {
+          throw errors;
+        }
 
         await user.save();
         return res.status(201).json(user);
@@ -66,7 +68,6 @@ dataSource
 
       try {
         const user = await User.findOneOrFail({ where: { uuid } });
-
         await user.remove();
 
         return res.json({ message: 'User deleted successfully' });
@@ -98,10 +99,11 @@ dataSource
       const { userId, title, body } = req.body;
 
       try {
-        const user = await User.findOneOrFail({ where: { uuid: userId } });
+        const user = await User.findOneOrFail({
+          where: { uuid: userId },
+        });
 
         const post = new Post({ title, body, user });
-
         await post.save();
 
         return res.status(201).json(post);
@@ -117,6 +119,57 @@ dataSource
         const posts = await Post.find({ relations: ['user'] });
 
         return res.json(posts);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Something went wrong' });
+      }
+    });
+
+    // FIND
+    app.get('/posts/:id', async (req: Request, res: Response) => {
+      const uuid = req.params.id;
+
+      try {
+        const post = await Post.findOneOrFail({
+          where: { uuid },
+          relations: ['user'],
+        });
+
+        return res.json(post);
+      } catch (err) {
+        console.log(err);
+        return res.status(404).json({ user: 'Post not found' });
+      }
+    });
+
+    // UPDATE
+    app.put('/posts/:id', async (req: Request, res: Response) => {
+      const uuid = req.params.id;
+      const { title, body } = req.body;
+
+      try {
+        const post = await Post.findOneOrFail({ where: { uuid } });
+
+        post.title = title || post.title;
+        post.body = body || post.body;
+
+        await post.save();
+        return res.json(post);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Something went wrong' });
+      }
+    });
+
+    // DELETE
+    app.delete('/posts/:id', async (req: Request, res: Response) => {
+      const uuid = req.params.id;
+
+      try {
+        const post = await Post.findOneOrFail({ where: { uuid } });
+        await post.remove();
+
+        return res.json({ message: 'Post deleted successfully' });
       } catch (err) {
         console.log(err);
         return res.status(500).json({ error: 'Something went wrong' });

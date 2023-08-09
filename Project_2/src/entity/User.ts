@@ -1,8 +1,8 @@
 import { IsEmail, IsEnum, Length } from 'class-validator';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, Relation } from 'typeorm';
 
-import Model from './Model';
-import { Post } from './Post';
+import Model from './Model.js';
+import { Post } from './Post.js';
 
 @Entity('users')
 export class User extends Model {
@@ -10,7 +10,7 @@ export class User extends Model {
   @Length(1, 255)
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   @Length(1, 255)
   @IsEmail()
   email: string;
@@ -24,5 +24,5 @@ export class User extends Model {
   role: string;
 
   @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
+  posts: Relation<Post[]>;
 }

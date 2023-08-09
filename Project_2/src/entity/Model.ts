@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 export default abstract class Model extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -23,7 +23,7 @@ export default abstract class Model extends BaseEntity {
 
   @BeforeInsert()
   createUuid() {
-    this.uuid = uuid();
+    this.uuid = randomUUID();
   }
 
   constructor(model?: Partial<any>) {

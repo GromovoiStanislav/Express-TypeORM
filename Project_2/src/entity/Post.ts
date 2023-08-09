@@ -1,8 +1,7 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, Relation } from 'typeorm';
 
-import Model from './Model';
-
-import { User } from './User';
+import Model from './Model.js';
+import { User } from './User.js';
 
 @Entity('posts')
 export class Post extends Model {
@@ -12,6 +11,6 @@ export class Post extends Model {
   @Column()
   body: string;
 
-  @ManyToOne(() => User)
-  user: User;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  user: Relation<User>;
 }

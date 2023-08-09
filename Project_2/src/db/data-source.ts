@@ -1,17 +1,23 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
   username: 'postgres',
   password: 'root',
-  database: 'node_postgres',
+  database: 'mydb',
   synchronize: false,
   logging: false,
 
-  entities: ['dist/entity/*.js', 'src/entity/*.ts'],
-  migrations: ['dist/db/migrations/*.js'],
+  entities: [path.join(__dirname, '../entity/**/**{.ts,.js}')],
+  migrations: [path.join(__dirname, './migrations/*.js')],
 };
 
 const dataSource = new DataSource(dataSourceOptions);

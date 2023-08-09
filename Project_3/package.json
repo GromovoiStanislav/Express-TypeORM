@@ -1,7 +1,6 @@
 {
   "name": "typeorm-app",
   "version": "0.0.1",
-  "description": "Project with TypeORM",
   "type": "module",
   "devDependencies": {
     "@types/express": "^4.17.15",
@@ -18,7 +17,7 @@
   },
   "scripts": {
     "typeorm": "typeorm-ts-node-commonjs",
-    "start:dev": "ts-node --esm src/index.ts",
+    "start:dev": "nodemon --exec ts-node --esm src/index.ts",
     "start:prod": "node dist/index.js",
     "build": "tsc"
   }
