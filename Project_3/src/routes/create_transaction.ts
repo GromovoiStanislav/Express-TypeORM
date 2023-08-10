@@ -9,7 +9,10 @@ router.post('/api/client/:clientId/transaction', async (req, res) => {
 
   const { type, amount } = req.body;
 
-  const client = await Client.findOneBy({ id: parseInt(clientId) });
+  const client = await Client.findOne({
+    where: { id: parseInt(clientId) },
+    relations: ['transactions'],
+  });
 
   if (!client) {
     return res.json({
@@ -35,9 +38,7 @@ router.post('/api/client/:clientId/transaction', async (req, res) => {
     client.balance = +client.balance - parseInt(amount);
   }
 
-  const clientTransactions = await client.transactions;
-  clientTransactions.push(transaction);
-  client.transactions = Promise.resolve(clientTransactions);
+  client.transactions.push(transaction);
 
   try {
     await client.save();

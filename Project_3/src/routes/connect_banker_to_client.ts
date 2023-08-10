@@ -9,7 +9,10 @@ router.put('/api/banker/:bankerId/client/:clientId', async (req, res) => {
 
   const client = await Client.findOneBy({ id: parseInt(clientId) });
 
-  const banker = await Banker.findOneBy({ id: parseInt(bankerId) });
+  const banker = await Banker.findOne({
+    where: { id: parseInt(bankerId) },
+    relations: ['clients'],
+  });
 
   if (banker && client) {
     //banker.clients = [client];

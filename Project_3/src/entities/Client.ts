@@ -48,5 +48,5 @@ export class Client extends Person {
   bankers: Relation<Banker[]>;
 
   @OneToMany(() => Transaction, (transaction) => transaction.client)
-  transactions: Relation<Promise<Transaction[]>>;
+  transactions: Relation<Transaction[]>;
 }
